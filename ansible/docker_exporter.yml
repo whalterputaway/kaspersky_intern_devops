@@ -1,0 +1,30 @@
+- name: Deploy docker exporter
+  become: yes
+  hosts: all
+
+  vars:
+    source: ../docker
+    destination: /home
+
+  tasks:
+    - name: Transmit requirements (app, requirements, dockerfile)
+      copy:
+        src: "{{ source }}"
+        dest: "{{ destination }}"
+        mode: 775
+    - name: Build docker image
+      shell: docker build -t prometheus-exporter:latest /home/docker/.
+      register: build
+    
+    - debug:
+        var: build
+
+    - name: Run docker container
+      shell: docker run -d -p 8080:8080 --name prometheus-exporter prometheus-exporter:latest
+      register: start
+        
+    - debug: 
+        var: start
+
+    
+

@@ -1,0 +1,44 @@
+- name: Push service exporter
+  become: yes
+  hosts: all
+
+  vars:
+    source: ../docker/app.py
+    destination: /home/app.py
+    config_source: ../others/python_exporter.service
+
+  tasks:
+    - name: Install pip
+      dnf:
+        name: python3-pip
+    - name: Install requirements
+      shell: pip3 install prometheus-client
+    - name: Create custorm groups
+      group:
+        name: exporter
+        state: present
+    - name: Create custom user
+      user:
+        name: exporter
+        append: yes
+        state: present
+        groups: [wheel, exporter]
+    - name: Push Python App to hosts
+      copy:
+        src: "{{ source }}"
+        dest: "{{ destination }}"
+        mode: 775
+    - name: Push service-unit config
+      copy:
+        src: "{{ config_source }}"
+        dest: /etc/systemd/system/python_exporter.service
+    - name: Daemon-reload
+      systemd:
+        daemon_reload: yes
+    - name: Set up service
+      service:
+        name: python_exporter
+        enabled: yes
+        state: started
+
+    

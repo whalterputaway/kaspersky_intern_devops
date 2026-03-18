@@ -1,0 +1,11 @@
+- name: Open AlmaLinux firewall ports
+  hosts: all
+  become: yes
+
+  tasks:
+  - shell: firewall-cmd --zone=public --permanent --add-port=8080/tcp
+    register: results
+
+  - debug:
+      var: results.stdout
+

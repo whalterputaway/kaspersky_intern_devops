@@ -1,0 +1,20 @@
+[Unit]
+Description=Python Prometheus App
+After=network.target
+
+[Service]
+Type=simple
+User=exporter
+Group=exporter
+WorkingDirectory=/home
+Environment="METRICS_PORT=8080"
+Environment="UPDATE_INTERVAL=30"
+ExecStart=/usr/bin/python3 /home/app.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+
+[Install]
+WantedBy=multi-user.target
