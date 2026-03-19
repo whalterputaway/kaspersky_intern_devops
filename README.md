@@ -59,7 +59,7 @@ $ terraform apply
 # Развертывание микросервиса на ВМ
 Развертывание сервиса реализуется с помощью Ansible плейбуков. Если мы развертываем на созданном вм, без использования облаков, то нужно открыть 8080/tcp порт.
 ```
-$ sudo firewall-cmd --zone=public --permanent -add-port=8080/tcp
+$ sudo firewall-cmd --zone=public --permanent --add-port=8080/tcp
 ```
 Так же можно воспользоваться написанным плейбуком `vm-settings.yml`:
 ```
